@@ -1,0 +1,56 @@
+/* page styles */
+body {
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+hr {
+	margin-top: 20px;
+}
+.indicator, .bar {
+	border: 1px solid gray;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 100px;
+	background-color: #ccc;
+}
+
+.bunch {
+	border: 1px solid gray;
+	margin: 10px;
+	width: 40px;
+	height: 40px;
+	background-color: #ccc;
+	display: inline-block;
+	padding:10px;
+	color: #ccc;
+}
+
+.container {
+  width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#box {
+	position: absolute;
+	width: 200px;
+	padding: 10px 20px;
+	border: 2px solid blue;
+	background-color: #ccc;
+}
+
+#barJump {
+	position: relative;
+	height: 24px;
+}
+
+#flea {
+	position: absolute;
+	left: 30px;
+	top: 0px;
+	font-size: 16px;
+}

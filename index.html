@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Animator</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="css/animator.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div class="container">
+    <h2 class='headline'>YAAL (Yet Another Animation Library)</h2>
+    <p><a href="js/yaal.js">Source code</a></p>
+
+    <hr>
+  	<h4>Animate CSS</h4>
+    <div id="barA" class='indicator'>Run once</div>
+
+    <hr>
+  	<h4>Easing Styles</h4>
+    <div id="bar1" class='indicator'>linear</div>
+    <div id="bar2" class='indicator'>swing</div>
+    <div id="bar3" class='indicator'>slowdown</div>
+    <div id="bar4" class='indicator'>speedup</div>
+    <div id="bar5" class='indicator'>elastic</div>
+    <div id="bar6" class='indicator'>bounce</div>
+
+    <hr>
+  	<h4>Loop</h4>
+    <div id="barLoop" class='indicator'>loop</div>
+
+    <hr>
+  	<h4>Oscillate</h4>
+    <div id="barOsc" class='indicator'>oscillate</div>
+
+    <hr>
+  	<h4>Run a custom function</h4>
+  	<button onClick="A_box.play();">start</button>
+  	<button onClick="A_box.stop();">stop</button>
+  	<div style="height:60px;">
+    	<div id="box"><b>movebox()</b></div>
+		</div>
+    <hr>
+  	<h4>Animate a bunch</h4>
+  	<button onClick="A_bunch.play();">start</button>
+  	<button onClick="A_bunch.stop();">stop</button>
+  	<div>
+	    <div class='bunch'>Y</div>
+	    <div class='bunch'>A</div>
+	    <div class='bunch'>A</div>
+	    <div class='bunch'>L</div>
+	  </div>
+
+    <hr>
+  	<h4>Chain animations</h4>
+  	<button onClick="A_slide.play();">start</button>
+    <div id="barJump" class='indicator'><div id="flea"><b>:O)</b></div></div>
+
+    <div style="height:100px;"></div>
+  </div>
+
+  <script src="js/yaal.js"></script>
+  <script>
+	    var A_jump = 
+	    		YAAL.animate(2000)		// jump right
+	    		.move("#flea", {
+							left:{to:"400px",ease:"linear"},
+							top:{to:"-400px",ease:"sin"},
+							"font-size":{to:"48px",ease:"speedup"}
+	        })
+	        .then(
+	        		YAAL.animate(1500)				// land
+	        		.move("#flea", {
+									"font-size":{from:"54px", to:"44px",ease:"bounce"}
+						  })
+						  .then(
+						  		YAAL.animate(1800)				// bounce back into box
+						  		.move("#flea", {
+											"font-size":{to:"16px",ease:"bounce"},
+											"left":{to:"30px",ease:"bounce"},
+											"top":{to:"3px",ease:"bounce"}
+									})
+							)
+				  );
+
+	    var A_slide = YAAL.animate(800)			// slide box right
+	        .move("#barJump", {
+							width:{to:"120px",ease:"swing"},
+							height:{to:"120px",ease:"speedup"},
+							"margin-left":{to:"220px",ease:"speedup"},
+							"background-color":{to:"#ff9933",ease:"speedup"}
+	        })
+	        .then(A_jump);
+
+	    var A_box = YAAL.animate(1000)
+	        .move(movebox, "swing")
+	        .loop();
+
+	    var A_bunch = new YAAL.Animation(400)
+	        .move(".bunch", {width:{to:"120px",ease:"swing"},
+	        								height:{to:"80px",ease:"speedup"},
+	        								"font-size":{to:"42px",ease:"speedup"},
+	        								"color":{to:"#3399cc",ease:"speedup"}
+	        })
+	        .oscillate();
+
+	    var A_easings = new YAAL.Animation(1200)
+	        .move("#bar1", {width:{to:"400px",ease:"linear"}})
+	        .move("#bar2", {width:{to:"400px",ease:"swing"}})
+	        .move("#bar3", {width:{to:"400px",ease:"slowdown"}})
+	        .move("#bar4", {width:{to:"400px",ease:"speedup"}})
+	        .move("#bar5", {width:{to:"400px",ease:"elastic"}})
+	        .move("#bar6", {width:{to:"400px",ease:"bounce"}})
+	        .oscillate();
+
+	    var A_loop = new YAAL.Animation(1000)
+	        .move("#barLoop", {width:{to:"400px",ease:"speedup"}})
+	        .loop();
+
+	    var A_osc = new YAAL.Animation(1000)
+	        .move("#barOsc", {width:{to:"400px",ease:"speedup"}})
+	        .oscillate();
+
+	    var A_first = YAAL.animate(1400)
+	        .move("#barA", { width:{from:"10%",to:"100%",ease:"linear"}, 
+	        								 "background-color":{to:"#ff9933",ease:"speedup"}
+	        })
+	        .then( function(){A_easings.play(); A_loop.play(); A_osc.play();} );
+
+	    var box = document.getElementById("box");
+
+	    function movebox(percent) {
+	        box.style.left = 400+(Math.cos(percent*2*Math.PI)*140) + "px";
+	        box.style.top = 700+(Math.sin(percent*2*Math.PI)*140) + "px";
+	        box.innerHTML = "left="+box.style.left;
+	    }
+
+			// // t: current time, b: begInnIng value, c: change In value, d: duration
+	  //   function easeOutBounce(x, t, b, c, d) {
+	  //       if ((t/=d) < (1/2.75)) {
+	  //           return c*(7.5625*t*t) + b;
+	  //       } else if (t < (2/2.75)) {
+	  //           return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+	  //       } else if (t < (2.5/2.75)) {
+	  //           return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+	  //       } else {
+	  //           return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+	  //       }
+	  //   }
+
+	    // start the first animation
+	    A_first.play();
+  </script>
+
+</body>
+</html>
